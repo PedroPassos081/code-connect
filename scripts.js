@@ -38,23 +38,50 @@ inputUpload.addEventListener("change", async (evento) => {
 const inputTags = document.getElementById("input-tags");
 const listaTags = document.getElementById("lista-tags");
 
-inputTags.addEventListener("keypress", (evento) => {
-  if (evento.key === "Enter") {
-    evento.preventDefault();
-    const tagTexto = inputTags.value.trim();
-    if (tagTexto !== "") {
-      const newTag = document.createElement("li");
-      newTag.innerHTML = `<p>${tagTexto}</p> <img src="./img/close-black.svg" class="remove-tag">`;
-
-      listaTags.appendChild(newTag);
-      inputTags.value = ""; // Limpa o campo de entrada
-    }
-  }
-});
-
 listaTags.addEventListener("click", (evento) => {
   if (evento.target.classList.contains("remove-tag")) {
     const tagRemover = evento.target.parentElement;
     listaTags.removeChild(tagRemover);
+  }
+});
+
+const tagsDisponiveis = [
+  "Front-end",
+  "Programação",
+  "Data Science",
+  "Full-stack",
+  "HTML",
+  "CSS",
+  "JavaScript",
+];
+
+async function verificarTags(tagTexto) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(tagsDisponiveis.includes(tagTexto));
+    }, 1000); // Simula uma verificação assíncrona
+  });
+}
+
+inputTags.addEventListener("keypress", async (evento) => {
+  if (evento.key === "Enter") {
+    evento.preventDefault();
+    const tagTexto = inputTags.value.trim();
+    if (tagTexto !== "") {
+      try {
+        const tagExiste = await verificarTags(tagTexto);
+        if (tagExiste) {
+          const tagNova = document.createElement("li");
+          tagNova.innerHTML = `<p>${tagTexto}</p> <img src="./img/close-black.svg" class="remove-tag">`;
+          listaTags.appendChild(tagNova);
+          inputTags.value = "";
+        } else {
+          alert("Tag não foi encontrada.");
+        }
+      } catch (error) {
+        console.error("Erro ao verificar a existência da tag");
+        alert("Erro ao verificar a existência da tag. Verifique o console.");
+      }
+    }
   }
 });
