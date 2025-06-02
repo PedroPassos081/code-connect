@@ -125,4 +125,17 @@ btnPublicar.addEventListener("click", async (evento) => {
   }
 });
 
+//função para descartar
 const btnDescartar = document.getElementById("btnDescartar");
+
+btnDescartar.addEventListener("click", (evento) => {
+  evento.preventDefault();
+
+  const formulario = document.querySelector("form");
+  formulario.reset();
+
+  imagemPrincipal.src = "./img/imagem1.png";
+  nomeImagem.textContent = "image_projeto.png";
+
+  listaTags.innerHTML = "";
+});
